@@ -1,0 +1,92 @@
+
+enum DataType { AUDIO, PDF, REVEALJS, VIDEO, XML }
+enum Category { ANSWER, INSTRUCTION, QUESTION }
+
+entity Question {
+  ask String required
+  numChoices Integer // the number of answer options
+}
+
+entity Answer {
+  posit String required
+  correct Boolean required
+}
+
+entity Series {
+  title String required
+  description TextBlob
+}
+
+entity Lesson {
+  title String required
+  description TextBlob
+  numQuestions Integer
+}
+
+entity Course {
+  title String required
+  description TextBlob
+}
+
+entity Instruction {
+  title String required
+}
+
+entity File {
+  name String required
+  category Category required
+  contentType DataType
+  data AnyBlob
+}
+
+relationship ManyToMany {
+  // Use ManyToOne instead - better to deep copywhen sharing
+  // Course{lesson(title)} to Lesson{course(title)}
+  Course{lesson(title)} to Lesson{course(title)}
+  Lesson{instruction(title)} to Instruction{lesson(title)}
+	Lesson{question(ask)} to Question{lesson(title) required}
+  Series{course(title)} to Course{series(title)}
+}
+
+relationship ManyToOne {
+  Course{user(login)} to User
+  Lesson{author(login) required} to User{lesson(title)}
+  Instruction{creator(login) required} to User{instruction(title)}
+  // Question{lesson(title)} to Lesson{question(ask)}
+  // Do deep copy when sharing
+  // Lesson{course(title)}  to Course{lesson(title)}
+  // Question{course(title)} to Course{question(posit)}
+  // Answer{question(ask) required} to Question{answer(posit)}
+}
+
+relationship ManyToMany {
+  Instruction{file(name)} to File{instruction(title)}
+  Answer{file(name)} to File{answer(posit)}
+  Question{file(name)} to File{question(ask)}
+}
+
+// A bidirectional relationship
+// Unidirectional not supported 
+// relationship OneToMany {} 
+
+relationship OneToMany {
+  Question{answer(posit)} to Answer{question(ask) required}
+}
+
+service all with serviceImpl
+dto * with mapstruct
+
+// Set pagination options
+paginate Course, Question, Answer, Lesson, File, Instruction with infinite-scroll
+
+// paginate Job with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+// service all with serviceImpl except Employee, Job
+// service all with serviceImpl
+
+// Set an angular suffix
+// angularSuffix * with mySuffix

@@ -5,7 +5,7 @@ This application was generated using JHipster 5.6.0, you can find documentation 
 
 To start your application in the dev profile, simply run:
 
-    
+    ./mvnw
 
 
 For further instructions on how to develop with JHipster, have a look at [Using JHipster in development][].
@@ -16,9 +16,11 @@ For further instructions on how to develop with JHipster, have a look at [Using 
 
 To optimize the jamking application for production, run:
 
+    ./mvnw -Pprod clean package
 
 To ensure everything worked, run:
 
+    java -jar target/*.war
 
 
 Refer to [Using JHipster in production][] for more details.
@@ -27,7 +29,7 @@ Refer to [Using JHipster in production][] for more details.
 
 To launch your application's tests, run:
 
-    ./gradlew test
+    ./mvnw clean test
 
 For more information, refer to the [Running tests page][].
 
@@ -42,7 +44,7 @@ docker-compose -f src/main/docker/sonar.yml up -d
 Then, run a Sonar analysis:
 
 ```
-./gradlew -Pprod clean test sonarqube
+./mvnw -Pprod clean test sonar:sonar
 ```
 
 For more information, refer to the [Code quality page][].
@@ -51,18 +53,18 @@ For more information, refer to the [Code quality page][].
 
 You can use Docker to improve your JHipster development experience. A number of docker-compose configuration are available in the [src/main/docker](src/main/docker) folder to launch required third party services.
 
-For example, to start a  database in a docker container, run:
+For example, to start a mysql database in a docker container, run:
 
-    docker-compose -f src/main/docker/.yml up -d
+    docker-compose -f src/main/docker/mysql.yml up -d
 
 To stop it and remove the container, run:
 
-    docker-compose -f src/main/docker/.yml down
+    docker-compose -f src/main/docker/mysql.yml down
 
 You can also fully dockerize your application and all the services that it depends on.
 To achieve this, first build a docker image of your app by running:
 
-    
+    ./mvnw package -Pprod jib:dockerBuild
 
 Then run:
 
