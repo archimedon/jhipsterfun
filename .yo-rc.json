@@ -1,0 +1,34 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.rdnsn.kingston"
+    },
+    "jhipsterVersion": "5.6.0",
+    "applicationType": "monolith",
+    "baseName": "jamking",
+    "packageName": "com.rdnsn.kingston",
+    "packageFolder": "com/rdnsn/kingston",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "mysql",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "YTZkYzRjZmI4YmU3M2E5YWEwMjBlOWU0NzZmNGY1Y2JjNDI0YmRmN2UzNzA4OWYzMWE3NTM0OGUyMGIxNDYzOWYxODk5NjJlM2Q4MDE3MGRmM2QxNDYyMjJkNjI2ODRlYTRkYjhlYTZlMTk5MjJhNTQ1OGVkYWJhYmViMDIzZDk=",
+    "clientFramework": "react",
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "testFrameworks": [
+      "protractor"
+    ],
+    "jhiPrefix": "jhi",
+    "enableTranslation": false
+  }
+}
