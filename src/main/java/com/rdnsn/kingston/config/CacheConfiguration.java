@@ -38,6 +38,28 @@ public class CacheConfiguration {
             cm.createCache(com.rdnsn.kingston.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(com.rdnsn.kingston.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.rdnsn.kingston.domain.User.class.getName() + ".authorities", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Question.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Question.class.getName() + ".answers", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Question.class.getName() + ".files", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Question.class.getName() + ".lessons", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Answer.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Answer.class.getName() + ".files", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Track.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Track.class.getName() + ".courses", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Lesson.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Lesson.class.getName() + ".instructions", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Lesson.class.getName() + ".questions", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Lesson.class.getName() + ".courses", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Course.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Course.class.getName() + ".lessons", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Course.class.getName() + ".tracks", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Instruction.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Instruction.class.getName() + ".files", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.Instruction.class.getName() + ".lessons", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.File.class.getName(), jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.File.class.getName() + ".instructions", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.File.class.getName() + ".answers", jcacheConfiguration);
+            cm.createCache(com.rdnsn.kingston.domain.File.class.getName() + ".questions", jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }
