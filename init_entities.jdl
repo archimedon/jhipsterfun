@@ -1,10 +1,15 @@
 
-enum DataType { AUDIO, PDF, REVEALJS, VIDEO, XML }
+// enum Bumdle { TAR, RAR }
+// enum Compression { B2ZIP, ZIP, GZIP }
+// enum InputMimeType { APPLICATION_BASE64, APPLICATION_BINHEX }
+// enum InputType { HTML, PLAIN, XML }
+enum InputMimeWrap { NONE, BASE64, BINHEX, JSON, BASE64_DIRTREE }
+
 enum Category { ANSWER, INSTRUCTION, QUESTION }
 
 entity Question {
   ask String required
-  numChoices Integer // the number of answer options
+  minNumOptions Integer // the number of answer options
 }
 
 entity Answer {
@@ -12,7 +17,7 @@ entity Answer {
   correct Boolean required
 }
 
-entity Series {
+entity Track {
   title String required
   description TextBlob
 }
@@ -20,7 +25,7 @@ entity Series {
 entity Lesson {
   title String required
   description TextBlob
-  numQuestions Integer
+  minNumQuestions Integer
 }
 
 entity Course {
@@ -30,12 +35,13 @@ entity Course {
 
 entity Instruction {
   title String required
+  input TextBlob
+  inputMimeWrap InputMimeWrap
 }
 
 entity File {
   name String required
   category Category required
-  contentType DataType
   data AnyBlob
 }
 
@@ -45,11 +51,11 @@ relationship ManyToMany {
   Course{lesson(title)} to Lesson{course(title)}
   Lesson{instruction(title)} to Instruction{lesson(title)}
 	Lesson{question(ask)} to Question{lesson(title) required}
-  Series{course(title)} to Course{series(title)}
+  Track{course(title)} to Course{track(title)}
 }
 
 relationship ManyToOne {
-  Course{user(login)} to User
+  Course{user(login) required} to User
   Lesson{author(login) required} to User{lesson(title)}
   Instruction{creator(login) required} to User{instruction(title)}
   // Question{lesson(title)} to Lesson{question(ask)}
