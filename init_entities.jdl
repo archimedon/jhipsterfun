@@ -4,11 +4,12 @@
 // enum InputMimeType { APPLICATION_BASE64, APPLICATION_BINHEX }
 // enum InputType { HTML, PLAIN, XML }
 enum InputMimeWrap { NONE, BASE64, BINHEX, JSON, BASE64_DIRTREE }
-
 enum Category { ANSWER, INSTRUCTION, QUESTION }
+enum AnswerType { CHECKBOX, RADIO, TEXT }
 
 entity Question {
   ask String required
+  answersAs AnswerType required
   minNumOptions Integer // the number of answer options
 }
 
