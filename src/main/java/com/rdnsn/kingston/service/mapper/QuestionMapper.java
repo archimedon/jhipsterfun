@@ -12,7 +12,7 @@ import org.mapstruct.*;
 public interface QuestionMapper extends EntityMapper<QuestionDTO, Question> {
 
 
-    @Mapping(target = "answers", ignore = true)
+    @Mapping(target = "answers", ignore = false)
     @Mapping(target = "lessons", ignore = true)
     Question toEntity(QuestionDTO questionDTO);
 

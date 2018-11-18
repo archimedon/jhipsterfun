@@ -11,6 +11,7 @@ import { getEntity } from './question.reducer';
 import { IQuestion } from 'app/shared/model/question.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
+import { IAnswer } from 'app/shared/model/answer.model';
 
 export interface IQuestionDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -18,6 +19,75 @@ export class QuestionDetail extends React.Component<IQuestionDetailProps> {
   componentDidMount() {
     this.props.getEntity(this.props.match.params.id);
   }
+
+  renderNestedAnswer(aQuestion: IQuestion) {
+    if (aQuestion.answersAs) {
+      // tslint:disable
+      console.log('aQuestion.answersAs: ', aQuestion);
+
+      const lineItem = (typeString: string) =>
+        aQuestion.answers.map(answer => {
+          const questionId = 'aQuestion_' + aQuestion.id;
+          const answerId = questionId.concat('_answer_' + answer.id);
+          return (
+            <li>
+              <input id={answerId} name={questionId + '_answer'} type={typeString} value={answer.posit} />
+              <label htmlFor={answerId}>
+                {!answer.files ? (
+                  <span>{answer.posit}</span>
+                ) : (
+                  answer.files.map(file => {
+                    const itemStyle = {
+                      width: '40%',
+                      border: answer.correct ? '10px solid orange' : '10px solid inherit'
+                    };
+                    return (
+                      <p>
+                        <img style={itemStyle} src={file.url} />
+                      </p>
+                    );
+                  })
+                )}
+              </label>
+            </li>
+          );
+        });
+      return (
+        <form action="#" onSubmit={void 0}>
+          <ul>{lineItem(aQuestion.answersAs)}</ul>
+        </form>
+      );
+    }
+  }
+  //   <dd>
+  //   {questionEntity.answers
+  //     ? questionEntity.answers.map((val, i) => (
+  //         <span key={val.id}>
+  //           <a>{val.posit}</a>
+  //           {val.files
+  //             ? val.files.map(file => <span key={file.id}><br/><img src={file.url}/><br/></span>)
+  //             : null
+  //           }
+  //           {i === questionEntity.answers.length - 1 ? '' : ', '}
+  //         </span>
+  //       ))
+  //     : null}
+  // </dd>
+  //   return <span>
+  //   {aQuestion.answers
+  //     ? aQuestion.answers.map((val, i) => (
+  //         <span key={val.id}>
+  //           <a>{val.posit}</a>
+  //           {val.files
+  //             ? val.files.map(file => <span key={file.id}><br/><img src={file.url}/><br/></span>)
+  //             : null
+  //           }
+  //           {i === aQuestion.answers.length - 1 ? '' : ', '}
+  //         </span>
+  //       ))
+  //     : null}
+  //     </span>;
+  // }
 
   render() {
     const { questionEntity } = this.props;
@@ -40,6 +110,8 @@ export class QuestionDetail extends React.Component<IQuestionDetailProps> {
               <span id="minNumOptions">Min Num Options</span>
             </dt>
             <dd>{questionEntity.minNumOptions}</dd>
+            <dt>Answers</dt>
+            <dd>{this.renderNestedAnswer(questionEntity)}</dd>
             <dt>File</dt>
             <dd>
               {questionEntity.files

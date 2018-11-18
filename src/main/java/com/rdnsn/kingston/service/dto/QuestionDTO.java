@@ -24,6 +24,10 @@ public class QuestionDTO implements Serializable {
 
     private Set<FileDTO> files = new HashSet<>();
 
+    private Set<AnswerDTO> answers = new HashSet<>();
+    public Set<AnswerDTO> getAnswers() { return answers; }
+    public void setAnswers(Set<AnswerDTO> answers) { this.answers = answers; }
+
     public Long getId() {
         return id;
     }

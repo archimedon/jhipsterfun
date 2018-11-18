@@ -24,7 +24,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     @Query(value = "select distinct question from Question question left join fetch question.files")
     List<Question> findAllWithEagerRelationships();
 
-    @Query("select question from Question question left join fetch question.files where question.id =:id")
+    @Query(value = "select question from Question question left join fetch question.answers left join fetch question.files where question.id=:id")
     Optional<Question> findOneWithEagerRelationships(@Param("id") Long id);
 
 }
