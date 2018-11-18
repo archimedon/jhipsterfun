@@ -19,6 +19,9 @@ public class AnswerDTO implements Serializable {
     @NotNull
     private Boolean correct;
 
+    @NotNull
+    private Boolean usePositWithFile;
+
     private Set<FileDTO> files = new HashSet<>();
 
     private Long questionId;
@@ -47,6 +50,14 @@ public class AnswerDTO implements Serializable {
 
     public void setCorrect(Boolean correct) {
         this.correct = correct;
+    }
+
+    public Boolean isUsePositWithFile() {
+        return usePositWithFile;
+    }
+
+    public void setUsePositWithFile(Boolean usePositWithFile) {
+        this.usePositWithFile = usePositWithFile;
     }
 
     public Set<FileDTO> getFiles() {
@@ -100,6 +111,7 @@ public class AnswerDTO implements Serializable {
             "id=" + getId() +
             ", posit='" + getPosit() + "'" +
             ", correct='" + isCorrect() + "'" +
+            ", usePositWithFile='" + isUsePositWithFile() + "'" +
             ", question=" + getQuestionId() +
             ", question='" + getQuestionAsk() + "'" +
             "}";

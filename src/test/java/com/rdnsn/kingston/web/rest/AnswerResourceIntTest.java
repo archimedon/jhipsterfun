@@ -54,6 +54,9 @@ public class AnswerResourceIntTest {
     private static final Boolean DEFAULT_CORRECT = false;
     private static final Boolean UPDATED_CORRECT = true;
 
+    private static final Boolean DEFAULT_USE_POSIT_WITH_FILE = false;
+    private static final Boolean UPDATED_USE_POSIT_WITH_FILE = true;
+
     @Autowired
     private AnswerRepository answerRepository;
 
@@ -106,7 +109,8 @@ public class AnswerResourceIntTest {
     public static Answer createEntity(EntityManager em) {
         Answer answer = new Answer()
             .posit(DEFAULT_POSIT)
-            .correct(DEFAULT_CORRECT);
+            .correct(DEFAULT_CORRECT)
+            .usePositWithFile(DEFAULT_USE_POSIT_WITH_FILE);
         // Add required entity
         Question question = QuestionResourceIntTest.createEntity(em);
         em.persist(question);
@@ -138,6 +142,7 @@ public class AnswerResourceIntTest {
         Answer testAnswer = answerList.get(answerList.size() - 1);
         assertThat(testAnswer.getPosit()).isEqualTo(DEFAULT_POSIT);
         assertThat(testAnswer.isCorrect()).isEqualTo(DEFAULT_CORRECT);
+        assertThat(testAnswer.isUsePositWithFile()).isEqualTo(DEFAULT_USE_POSIT_WITH_FILE);
     }
 
     @Test
@@ -200,6 +205,25 @@ public class AnswerResourceIntTest {
 
     @Test
     @Transactional
+    public void checkUsePositWithFileIsRequired() throws Exception {
+        int databaseSizeBeforeTest = answerRepository.findAll().size();
+        // set the field null
+        answer.setUsePositWithFile(null);
+
+        // Create the Answer, which fails.
+        AnswerDTO answerDTO = answerMapper.toDto(answer);
+
+        restAnswerMockMvc.perform(post("/api/answers")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
+            .andExpect(status().isBadRequest());
+
+        List<Answer> answerList = answerRepository.findAll();
+        assertThat(answerList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllAnswers() throws Exception {
         // Initialize the database
         answerRepository.saveAndFlush(answer);
@@ -210,7 +234,8 @@ public class AnswerResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(answer.getId().intValue())))
             .andExpect(jsonPath("$.[*].posit").value(hasItem(DEFAULT_POSIT.toString())))
-            .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())));
+            .andExpect(jsonPath("$.[*].correct").value(hasItem(DEFAULT_CORRECT.booleanValue())))
+            .andExpect(jsonPath("$.[*].usePositWithFile").value(hasItem(DEFAULT_USE_POSIT_WITH_FILE.booleanValue())));
     }
     
     public void getAllAnswersWithEagerRelationshipsIsEnabled() throws Exception {
@@ -256,7 +281,8 @@ public class AnswerResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(answer.getId().intValue()))
             .andExpect(jsonPath("$.posit").value(DEFAULT_POSIT.toString()))
-            .andExpect(jsonPath("$.correct").value(DEFAULT_CORRECT.booleanValue()));
+            .andExpect(jsonPath("$.correct").value(DEFAULT_CORRECT.booleanValue()))
+            .andExpect(jsonPath("$.usePositWithFile").value(DEFAULT_USE_POSIT_WITH_FILE.booleanValue()));
     }
 
     @Test
@@ -281,7 +307,8 @@ public class AnswerResourceIntTest {
         em.detach(updatedAnswer);
         updatedAnswer
             .posit(UPDATED_POSIT)
-            .correct(UPDATED_CORRECT);
+            .correct(UPDATED_CORRECT)
+            .usePositWithFile(UPDATED_USE_POSIT_WITH_FILE);
         AnswerDTO answerDTO = answerMapper.toDto(updatedAnswer);
 
         restAnswerMockMvc.perform(put("/api/answers")
@@ -295,6 +322,7 @@ public class AnswerResourceIntTest {
         Answer testAnswer = answerList.get(answerList.size() - 1);
         assertThat(testAnswer.getPosit()).isEqualTo(UPDATED_POSIT);
         assertThat(testAnswer.isCorrect()).isEqualTo(UPDATED_CORRECT);
+        assertThat(testAnswer.isUsePositWithFile()).isEqualTo(UPDATED_USE_POSIT_WITH_FILE);
     }
 
     @Test

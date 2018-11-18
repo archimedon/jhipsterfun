@@ -6,6 +6,7 @@ export default class AnswerUpdatePage {
   cancelButton: ElementFinder = element(by.id('cancel-save'));
   positInput: ElementFinder = element(by.css('input#answer-posit'));
   correctInput: ElementFinder = element(by.css('input#answer-correct'));
+  usePositWithFileInput: ElementFinder = element(by.css('input#answer-usePositWithFile'));
   fileSelect: ElementFinder = element(by.css('select#answer-file'));
   questionSelect: ElementFinder = element(by.css('select#answer-question'));
 
@@ -23,6 +24,9 @@ export default class AnswerUpdatePage {
 
   getCorrectInput() {
     return this.correctInput;
+  }
+  getUsePositWithFileInput() {
+    return this.usePositWithFileInput;
   }
   async fileSelectLastOption() {
     await this.fileSelect

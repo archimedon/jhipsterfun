@@ -115,6 +115,12 @@ export class AnswerUpdate extends React.Component<IAnswerUpdateProps, IAnswerUpd
                   </Label>
                 </AvGroup>
                 <AvGroup>
+                  <Label id="usePositWithFileLabel" check>
+                    <AvInput id="answer-usePositWithFile" type="checkbox" className="form-control" name="usePositWithFile" />
+                    Use Posit With File
+                  </Label>
+                </AvGroup>
+                <AvGroup>
                   <Label for="files">File</Label>
                   <AvInput
                     id="answer-file"

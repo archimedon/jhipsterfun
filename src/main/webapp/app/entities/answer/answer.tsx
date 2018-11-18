@@ -95,6 +95,9 @@ export class Answer extends React.Component<IAnswerProps, IAnswerState> {
                   <th className="hand" onClick={this.sort('correct')}>
                     Correct <FontAwesomeIcon icon="sort" />
                   </th>
+                  <th className="hand" onClick={this.sort('usePositWithFile')}>
+                    Use Posit With File <FontAwesomeIcon icon="sort" />
+                  </th>
                   <th>
                     Question <FontAwesomeIcon icon="sort" />
                   </th>
@@ -111,6 +114,7 @@ export class Answer extends React.Component<IAnswerProps, IAnswerState> {
                     </td>
                     <td>{answer.posit}</td>
                     <td>{answer.correct ? 'true' : 'false'}</td>
+                    <td>{answer.usePositWithFile ? 'true' : 'false'}</td>
                     <td>{answer.questionAsk ? <Link to={`question/${answer.questionId}`}>{answer.questionAsk}</Link> : ''}</td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">

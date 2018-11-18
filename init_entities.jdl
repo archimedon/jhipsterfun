@@ -16,6 +16,7 @@ entity Question {
 entity Answer {
   posit String required
   correct Boolean required
+  usePositWithFile Boolean required
 }
 
 entity Track {

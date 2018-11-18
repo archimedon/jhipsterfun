@@ -4,11 +4,13 @@ export interface IAnswer {
   id?: number;
   posit?: string;
   correct?: boolean;
+  usePositWithFile?: boolean;
   files?: IFile[];
   questionAsk?: string;
   questionId?: number;
 }
 
 export const defaultValue: Readonly<IAnswer> = {
-  correct: false
+  correct: false,
+  usePositWithFile: false
 };

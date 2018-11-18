@@ -56,6 +56,14 @@ describe('Answer e2e test', () => {
             await answerUpdatePage.getCorrectInput().click();
             expect(await answerUpdatePage.getCorrectInput().isSelected()).to.be.true;
         }
+        const selectedUsePositWithFile = await answerUpdatePage.getUsePositWithFileInput().isSelected();
+        if (selectedUsePositWithFile) {
+            await answerUpdatePage.getUsePositWithFileInput().click();
+            expect(await answerUpdatePage.getUsePositWithFileInput().isSelected()).to.be.false;
+        } else {
+            await answerUpdatePage.getUsePositWithFileInput().click();
+            expect(await answerUpdatePage.getUsePositWithFileInput().isSelected()).to.be.true;
+        }
         // answerUpdatePage.fileSelectLastOption();
         await answerUpdatePage.questionSelectLastOption();
         await waitUntilDisplayed(answerUpdatePage.getSaveButton());

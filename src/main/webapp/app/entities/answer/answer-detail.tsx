@@ -36,6 +36,10 @@ export class AnswerDetail extends React.Component<IAnswerDetailProps> {
               <span id="correct">Correct</span>
             </dt>
             <dd>{answerEntity.correct ? 'true' : 'false'}</dd>
+            <dt>
+              <span id="usePositWithFile">Use Posit With File</span>
+            </dt>
+            <dd>{answerEntity.usePositWithFile ? 'true' : 'false'}</dd>
             <dt>File</dt>
             <dd>
               {answerEntity.files

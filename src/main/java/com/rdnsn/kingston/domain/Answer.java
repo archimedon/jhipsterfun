@@ -34,6 +34,10 @@ public class Answer implements Serializable {
     @Column(name = "correct", nullable = false)
     private Boolean correct;
 
+    @NotNull
+    @Column(name = "use_posit_with_file", nullable = false)
+    private Boolean usePositWithFile;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "answer_file",
@@ -79,6 +83,19 @@ public class Answer implements Serializable {
 
     public void setCorrect(Boolean correct) {
         this.correct = correct;
+    }
+
+    public Boolean isUsePositWithFile() {
+        return usePositWithFile;
+    }
+
+    public Answer usePositWithFile(Boolean usePositWithFile) {
+        this.usePositWithFile = usePositWithFile;
+        return this;
+    }
+
+    public void setUsePositWithFile(Boolean usePositWithFile) {
+        this.usePositWithFile = usePositWithFile;
     }
 
     public Set<File> getFiles() {
@@ -146,6 +163,7 @@ public class Answer implements Serializable {
             "id=" + getId() +
             ", posit='" + getPosit() + "'" +
             ", correct='" + isCorrect() + "'" +
+            ", usePositWithFile='" + isUsePositWithFile() + "'" +
             "}";
     }
 }
