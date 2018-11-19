@@ -33,9 +33,9 @@ export class QuestionDetail extends React.Component<IQuestionDetailProps> {
             <li>
               <input id={answerId} name={questionId + '_answer'} type={typeString} value={answer.posit} />
               <label htmlFor={answerId}>
-                {!answer.files ? (
-                  <span>{answer.posit}</span>
-                ) : (
+                {answer.usePositWithFile ? <span>{answer.posit}</span> : null}
+                {answer.files ? (
+                  // If the answer has files
                   answer.files.map(file => {
                     const itemStyle = {
                       width: '40%',
@@ -47,7 +47,10 @@ export class QuestionDetail extends React.Component<IQuestionDetailProps> {
                       </p>
                     );
                   })
-                )}
+                ) : (
+                  <span>{answer.posit}</span>
+                ) // otherwise show text
+                }
               </label>
             </li>
           );
