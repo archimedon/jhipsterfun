@@ -43,7 +43,7 @@ export class QuestionDetail extends React.Component<IQuestionDetailProps> {
                     };
                     return (
                       <p>
-                        <img style={itemStyle} src={file.url} />
+                        <img style={itemStyle} src={'data:' + file.dataContentType + ';base64,' + file.data} />
                       </p>
                     );
                   })
