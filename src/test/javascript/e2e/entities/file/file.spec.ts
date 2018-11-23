@@ -52,8 +52,6 @@ describe('File e2e test', () => {
     await fileUpdatePage.setNameInput('name');
     expect(await fileUpdatePage.getNameInput()).to.match(/name/);
     await fileUpdatePage.categorySelectLastOption();
-    await fileUpdatePage.setUrlInput('url');
-    expect(await fileUpdatePage.getUrlInput()).to.match(/url/);
     await fileUpdatePage.setDataInput(absolutePath);
     await waitUntilDisplayed(fileUpdatePage.getSaveButton());
     await fileUpdatePage.save();

@@ -13,6 +13,7 @@ import { IQuestion } from 'app/shared/model/question.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import MathJax from 'react-mathjax-preview';
 
 export interface IQuestionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -109,7 +110,9 @@ export class Question extends React.Component<IQuestionProps, IQuestionState> {
                         {question.id}
                       </Button>
                     </td>
-                    <td>{question.ask}</td>
+                    <td>
+                      <MathJax math={question.ask} />
+                    </td>
                     <td>{question.answersAs}</td>
                     <td>{question.minNumOptions}</td>
                     <td className="text-right">

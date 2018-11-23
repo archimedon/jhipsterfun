@@ -37,9 +37,6 @@ public class File implements Serializable {
     @Column(name = "category", nullable = false)
     private Category category;
 
-    @Column(name = "url")
-    private String url;
-
     @Lob
     @Column(name = "data")
     private byte[] data;
@@ -95,19 +92,6 @@ public class File implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public File url(String url) {
-        this.url = url;
-        return this;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public byte[] getData() {
@@ -238,7 +222,6 @@ public class File implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", category='" + getCategory() + "'" +
-            ", url='" + getUrl() + "'" +
             ", data='" + getData() + "'" +
             ", dataContentType='" + getDataContentType() + "'" +
             "}";

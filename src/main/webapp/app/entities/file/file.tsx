@@ -95,9 +95,6 @@ export class File extends React.Component<IFileProps, IFileState> {
                   <th className="hand" onClick={this.sort('category')}>
                     Category <FontAwesomeIcon icon="sort" />
                   </th>
-                  <th className="hand" onClick={this.sort('url')}>
-                    Url <FontAwesomeIcon icon="sort" />
-                  </th>
                   <th className="hand" onClick={this.sort('data')}>
                     Data <FontAwesomeIcon icon="sort" />
                   </th>
@@ -114,7 +111,6 @@ export class File extends React.Component<IFileProps, IFileState> {
                     </td>
                     <td>{file.name}</td>
                     <td>{file.category}</td>
-                    <td>{file.url}</td>
                     <td>
                       {file.data ? (
                         <div>

@@ -37,10 +37,6 @@ export class FileDetail extends React.Component<IFileDetailProps> {
             </dt>
             <dd>{fileEntity.category}</dd>
             <dt>
-              <span id="url">Url</span>
-            </dt>
-            <dd>{fileEntity.url}</dd>
-            <dt>
               <span id="data">Data</span>
             </dt>
             <dd>

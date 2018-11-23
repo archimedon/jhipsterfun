@@ -18,10 +18,13 @@ import { IQuestion } from 'app/shared/model/question.model';
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
+import FileUploadForm from 'app/entities/nested/file_upload_form';
+
 export interface IQuestionUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export interface IQuestionUpdateState {
   isNew: boolean;
+  addFile: boolean;
   idsfile: any[];
   lessonId: string;
 }
@@ -32,7 +35,8 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     this.state = {
       idsfile: [],
       lessonId: '0',
-      isNew: !this.props.match.params || !this.props.match.params.id
+      isNew: !this.props.match.params || !this.props.match.params.id,
+      addFile: false
     };
   }
 
@@ -66,6 +70,10 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
         this.props.updateEntity(entity);
       }
     }
+  };
+
+  hitDis = e => {
+    this.setState({ addFile: true });
   };
 
   handleClose = () => {
@@ -127,6 +135,10 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
                     Min Num Options
                   </Label>
                   <AvField id="question-minNumOptions" type="string" className="form-control" name="minNumOptions" />
+                </AvGroup>
+                <AvGroup>
+                  <a onClick={this.hitDis}>Add File</a>
+                  {this.state.addFile ? <FileUploadForm path="path/" mime="mime/mime" isLoaded questionId={[1]} /> : null}
                 </AvGroup>
                 <AvGroup>
                   <Label for="files">File</Label>

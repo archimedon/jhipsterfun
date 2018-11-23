@@ -14,11 +14,12 @@ import { IAnswer } from 'app/shared/model/answer.model';
 import { getEntities as getAnswers } from 'app/entities/answer/answer.reducer';
 import { IQuestion } from 'app/shared/model/question.model';
 import { getEntities as getQuestions } from 'app/entities/question/question.reducer';
-import { getEntity, updateEntity, createEntity, setBlob, reset } from './file.reducer';
+import { getUserLink, getEntity, updateEntity, createEntity, setBlob, reset } from './file.reducer';
 import { IFile } from 'app/shared/model/file.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import axios from 'axios';
 
 export interface IFileUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -63,6 +64,11 @@ export class FileUpdate extends React.Component<IFileUpdateProps, IFileUpdateSta
   clearBlob = name => () => {
     this.props.setBlob(name, undefined, undefined);
   };
+
+  // showUrl = (e: any) => {
+  //   const val = getUserLink(e.target.value);
+  //   document.getElementById('showFile').innerHTML = JSON.stringify(val);
+  // };
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
@@ -136,12 +142,7 @@ export class FileUpdate extends React.Component<IFileUpdateProps, IFileUpdateSta
                     <option value="QUESTION">QUESTION</option>
                   </AvInput>
                 </AvGroup>
-                <AvGroup>
-                  <Label id="urlLabel" for="url">
-                    Url
-                  </Label>
-                  <AvField id="file-url" type="text" name="url" />
-                </AvGroup>
+                <div id="showFile"> Ragga </div>
                 <AvGroup>
                   <AvGroup>
                     <Label id="dataLabel" for="data">

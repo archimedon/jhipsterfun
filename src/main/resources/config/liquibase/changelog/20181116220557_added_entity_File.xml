@@ -30,10 +30,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="url" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-
             <column name="data" type="longblob">
                 <constraints nullable="true" />
             </column>

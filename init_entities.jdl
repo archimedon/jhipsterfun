@@ -44,7 +44,7 @@ entity Instruction {
 entity File {
   name String required
   category Category required
-  url String // populate with access URL
+  // url String // populate with access URL
   data AnyBlob
 }
 

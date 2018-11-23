@@ -12,7 +12,6 @@ export interface IFile {
   id?: number;
   name?: string;
   category?: Category;
-  url?: string;
   dataContentType?: string;
   data?: any;
   instructions?: IInstruction[];

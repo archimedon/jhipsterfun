@@ -50,9 +50,6 @@ public class FileResourceIntTest {
     private static final Category DEFAULT_CATEGORY = Category.ANSWER;
     private static final Category UPDATED_CATEGORY = Category.INSTRUCTION;
 
-    private static final String DEFAULT_URL = "AAAAAAAAAA";
-    private static final String UPDATED_URL = "BBBBBBBBBB";
-
     private static final byte[] DEFAULT_DATA = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_DATA = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_DATA_CONTENT_TYPE = "image/jpg";
@@ -104,7 +101,6 @@ public class FileResourceIntTest {
         File file = new File()
             .name(DEFAULT_NAME)
             .category(DEFAULT_CATEGORY)
-            .url(DEFAULT_URL)
             .data(DEFAULT_DATA)
             .dataContentType(DEFAULT_DATA_CONTENT_TYPE);
         return file;
@@ -133,7 +129,6 @@ public class FileResourceIntTest {
         File testFile = fileList.get(fileList.size() - 1);
         assertThat(testFile.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testFile.getCategory()).isEqualTo(DEFAULT_CATEGORY);
-        assertThat(testFile.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testFile.getData()).isEqualTo(DEFAULT_DATA);
         assertThat(testFile.getDataContentType()).isEqualTo(DEFAULT_DATA_CONTENT_TYPE);
     }
@@ -209,7 +204,6 @@ public class FileResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(file.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME.toString())))
             .andExpect(jsonPath("$.[*].category").value(hasItem(DEFAULT_CATEGORY.toString())))
-            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL.toString())))
             .andExpect(jsonPath("$.[*].dataContentType").value(hasItem(DEFAULT_DATA_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].data").value(hasItem(Base64Utils.encodeToString(DEFAULT_DATA))));
     }
@@ -227,7 +221,6 @@ public class FileResourceIntTest {
             .andExpect(jsonPath("$.id").value(file.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME.toString()))
             .andExpect(jsonPath("$.category").value(DEFAULT_CATEGORY.toString()))
-            .andExpect(jsonPath("$.url").value(DEFAULT_URL.toString()))
             .andExpect(jsonPath("$.dataContentType").value(DEFAULT_DATA_CONTENT_TYPE))
             .andExpect(jsonPath("$.data").value(Base64Utils.encodeToString(DEFAULT_DATA)));
     }
@@ -255,7 +248,6 @@ public class FileResourceIntTest {
         updatedFile
             .name(UPDATED_NAME)
             .category(UPDATED_CATEGORY)
-            .url(UPDATED_URL)
             .data(UPDATED_DATA)
             .dataContentType(UPDATED_DATA_CONTENT_TYPE);
         FileDTO fileDTO = fileMapper.toDto(updatedFile);
@@ -271,7 +263,6 @@ public class FileResourceIntTest {
         File testFile = fileList.get(fileList.size() - 1);
         assertThat(testFile.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testFile.getCategory()).isEqualTo(UPDATED_CATEGORY);
-        assertThat(testFile.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testFile.getData()).isEqualTo(UPDATED_DATA);
         assertThat(testFile.getDataContentType()).isEqualTo(UPDATED_DATA_CONTENT_TYPE);
     }

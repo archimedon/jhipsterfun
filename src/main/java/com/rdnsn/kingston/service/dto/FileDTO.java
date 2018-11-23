@@ -19,8 +19,6 @@ public class FileDTO implements Serializable {
     @NotNull
     private Category category;
 
-    private String url;
-
     @Lob
     private byte[] data;
     private String dataContentType;
@@ -47,14 +45,6 @@ public class FileDTO implements Serializable {
 
     public void setCategory(Category category) {
         this.category = category;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     public byte[] getData() {
@@ -100,7 +90,6 @@ public class FileDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", category='" + getCategory() + "'" +
-            ", url='" + getUrl() + "'" +
             ", data='" + getData() + "'" +
             "}";
     }
