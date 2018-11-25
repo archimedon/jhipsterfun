@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { IQuestion } from 'app/shared/model/question.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import MathJax from 'react-mathjax-preview';
+import AskView from 'app/entities/question/ask_view';
 
 export interface IQuestionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -111,7 +111,7 @@ export class Question extends React.Component<IQuestionProps, IQuestionState> {
                       </Button>
                     </td>
                     <td>
-                      <MathJax math={question.ask} />
+                      <AskView ask={question.ask} />
                     </td>
                     <td>{question.answersAs}</td>
                     <td>{question.minNumOptions}</td>

@@ -35,6 +35,10 @@ entity Course {
   description TextBlob
 }
 
+entity Category {
+  name String required
+}
+
 entity Instruction {
   title String required
   input TextBlob

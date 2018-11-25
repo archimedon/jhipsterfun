@@ -18,13 +18,10 @@ import { IQuestion } from 'app/shared/model/question.model';
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
 
-import FileUploadForm from 'app/entities/nested/file_upload_form';
-
 export interface IQuestionUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
 export interface IQuestionUpdateState {
   isNew: boolean;
-  addFile: boolean;
   idsfile: any[];
   lessonId: string;
 }
@@ -35,10 +32,13 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     this.state = {
       idsfile: [],
       lessonId: '0',
-      isNew: !this.props.match.params || !this.props.match.params.id,
-      addFile: false
+      isNew: !this.props.match.params || !this.props.match.params.id
     };
   }
+
+  // viewDat(uri) {
+  //   return { 'background-image': 'url(uri)' };
+  // }
 
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
@@ -70,10 +70,6 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
         this.props.updateEntity(entity);
       }
     }
-  };
-
-  hitDis = e => {
-    this.setState({ addFile: true });
   };
 
   handleClose = () => {
@@ -137,10 +133,6 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
                   <AvField id="question-minNumOptions" type="string" className="form-control" name="minNumOptions" />
                 </AvGroup>
                 <AvGroup>
-                  <a onClick={this.hitDis}>Add File</a>
-                  {this.state.addFile ? <FileUploadForm path="path/" mime="mime/mime" isLoaded questionId={[1]} /> : null}
-                </AvGroup>
-                <AvGroup>
                   <Label for="files">File</Label>
                   <AvInput
                     id="question-file"
@@ -152,9 +144,9 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
                   >
                     <option value="" key="0" />
                     {files
-                      ? files.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.name}
+                      ? files.map(file => (
+                          <option value={file.id} key={file.id} style={viewDat(file.data, file.dataContentType)}>
+                            {file.name}
                           </option>
                         ))
                       : null}
@@ -178,6 +170,15 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     );
   }
 }
+
+const viewDat = (data, dataContentType) => ({
+  backgroundColor: '#fefefe',
+  height: '40px',
+  backgroundImage: `url(data:${dataContentType};base64,${data})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  backgroundRepeat: 'no-repeat'
+});
 
 const mapStateToProps = (storeState: IRootState) => ({
   files: storeState.file.entities,
