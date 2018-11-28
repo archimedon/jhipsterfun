@@ -4,7 +4,7 @@ export default class QuestionUpdatePage {
   pageTitle: ElementFinder = element(by.id('jamkingApp.question.home.createOrEditLabel'));
   saveButton: ElementFinder = element(by.id('save-entity'));
   cancelButton: ElementFinder = element(by.id('cancel-save'));
-  askInput: ElementFinder = element(by.css('input#question-ask'));
+  askInput: ElementFinder = element(by.css('textarea#question-ask'));
   answersAsSelect: ElementFinder = element(by.css('select#question-answersAs'));
   minNumOptionsInput: ElementFinder = element(by.css('input#question-minNumOptions'));
   fileSelect: ElementFinder = element(by.css('select#question-file'));

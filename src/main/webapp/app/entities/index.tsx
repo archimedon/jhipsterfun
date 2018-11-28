@@ -11,6 +11,7 @@ import Lesson from './lesson';
 import Course from './course';
 import Instruction from './instruction';
 import File from './file';
+import Category from './category';
 /* jhipster-needle-add-route-import - JHipster will add routes here */
 
 const Routes = ({ match }) => (
@@ -24,6 +25,7 @@ const Routes = ({ match }) => (
       <ErrorBoundaryRoute path={`${match.url}/course`} component={Course} />
       <ErrorBoundaryRoute path={`${match.url}/instruction`} component={Instruction} />
       <ErrorBoundaryRoute path={`${match.url}/file`} component={File} />
+      <ErrorBoundaryRoute path={`${match.url}/category`} component={Category} />
       {/* jhipster-needle-add-route-path - JHipster will routes here */}
     </Switch>
   </div>

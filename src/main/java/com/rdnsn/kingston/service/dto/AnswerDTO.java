@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+import javax.persistence.Lob;
 
 /**
  * A DTO for the Answer entity.
@@ -13,7 +14,8 @@ public class AnswerDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    
+    @Lob
     private String posit;
 
     @NotNull

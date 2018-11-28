@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 // tslint:disable-next-line:no-unused-variable
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { ICrudGetAction, ICrudGetAllAction, setFileData, byteSize, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -12,7 +12,7 @@ import { IFile } from 'app/shared/model/file.model';
 import { getEntities as getFiles } from 'app/entities/file/file.reducer';
 import { ILesson } from 'app/shared/model/lesson.model';
 import { getEntities as getLessons } from 'app/entities/lesson/lesson.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './question.reducer';
+import { getEntity, updateEntity, createEntity, setBlob, reset } from './question.reducer';
 import { IQuestion } from 'app/shared/model/question.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
@@ -36,10 +36,6 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     };
   }
 
-  // viewDat(uri) {
-  //   return { 'background-image': 'url(uri)' };
-  // }
-
   componentWillUpdate(nextProps, nextState) {
     if (nextProps.updateSuccess !== this.props.updateSuccess && nextProps.updateSuccess) {
       this.handleClose();
@@ -54,6 +50,14 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     this.props.getFiles();
     this.props.getLessons();
   }
+
+  onBlobChange = (isAnImage, name) => event => {
+    setFileData(event, (contentType, data) => this.props.setBlob(name, data, contentType), isAnImage);
+  };
+
+  clearBlob = name => () => {
+    this.props.setBlob(name, undefined, undefined);
+  };
 
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
@@ -80,6 +84,8 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
     const { questionEntity, files, lessons, loading, updating } = this.props;
     const { isNew } = this.state;
 
+    const { ask } = questionEntity;
+
     return (
       <div>
         <Row className="justify-content-center">
@@ -103,9 +109,9 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
                   <Label id="askLabel" for="ask">
                     Ask
                   </Label>
-                  <AvField
+                  <AvInput
                     id="question-ask"
-                    type="text"
+                    type="textarea"
                     name="ask"
                     validate={{
                       required: { value: true, errorMessage: 'This field is required.' }
@@ -144,9 +150,9 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
                   >
                     <option value="" key="0" />
                     {files
-                      ? files.map(file => (
-                          <option value={file.id} key={file.id} style={viewDat(file.data, file.dataContentType)}>
-                            {file.name}
+                      ? files.map(otherEntity => (
+                          <option value={otherEntity.id} key={otherEntity.id}>
+                            {otherEntity.name}
                           </option>
                         ))
                       : null}
@@ -171,15 +177,6 @@ export class QuestionUpdate extends React.Component<IQuestionUpdateProps, IQuest
   }
 }
 
-const viewDat = (data, dataContentType) => ({
-  backgroundColor: '#fefefe',
-  height: '40px',
-  backgroundImage: `url(data:${dataContentType};base64,${data})`,
-  backgroundPosition: 'center',
-  backgroundSize: 'cover',
-  backgroundRepeat: 'no-repeat'
-});
-
 const mapStateToProps = (storeState: IRootState) => ({
   files: storeState.file.entities,
   lessons: storeState.lesson.entities,
@@ -194,6 +191,7 @@ const mapDispatchToProps = {
   getLessons,
   getEntity,
   updateEntity,
+  setBlob,
   createEntity,
   reset
 };

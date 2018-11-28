@@ -26,7 +26,8 @@ public class Answer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    
+    @Lob
     @Column(name = "posit", nullable = false)
     private String posit;
 

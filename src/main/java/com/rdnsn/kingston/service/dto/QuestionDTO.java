@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Objects;
+import javax.persistence.Lob;
 import com.rdnsn.kingston.domain.enumeration.AnswerType;
 
 /**
@@ -14,7 +15,8 @@ public class QuestionDTO implements Serializable {
 
     private Long id;
 
-    @NotNull
+    
+    @Lob
     private String ask;
 
     @NotNull

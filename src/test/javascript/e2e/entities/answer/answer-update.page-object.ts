@@ -4,7 +4,7 @@ export default class AnswerUpdatePage {
   pageTitle: ElementFinder = element(by.id('jamkingApp.answer.home.createOrEditLabel'));
   saveButton: ElementFinder = element(by.id('save-entity'));
   cancelButton: ElementFinder = element(by.id('cancel-save'));
-  positInput: ElementFinder = element(by.css('input#answer-posit'));
+  positInput: ElementFinder = element(by.css('textarea#answer-posit'));
   correctInput: ElementFinder = element(by.css('input#answer-correct'));
   usePositWithFileInput: ElementFinder = element(by.css('input#answer-usePositWithFile'));
   fileSelect: ElementFinder = element(by.css('select#answer-file'));

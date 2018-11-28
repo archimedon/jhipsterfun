@@ -8,13 +8,13 @@ enum Category { ANSWER, INSTRUCTION, QUESTION }
 enum AnswerType { CHECKBOX, RADIO, TEXT }
 
 entity Question {
-  ask String required
+  ask TextBlob required
   answersAs AnswerType required
   minNumOptions Integer // the number of answer options
 }
 
 entity Answer {
-  posit String required
+  posit TextBlob required
   correct Boolean required
   usePositWithFile Boolean required
 }

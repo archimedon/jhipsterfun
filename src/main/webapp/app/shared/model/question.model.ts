@@ -10,7 +10,7 @@ export const enum AnswerType {
 
 export interface IQuestion {
   id?: number;
-  ask?: string;
+  ask?: any;
   answersAs?: AnswerType;
   minNumOptions?: number;
   answers?: IAnswer[];

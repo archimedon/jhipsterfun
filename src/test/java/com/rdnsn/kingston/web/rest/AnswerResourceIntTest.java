@@ -26,6 +26,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -163,25 +164,6 @@ public class AnswerResourceIntTest {
         // Validate the Answer in the database
         List<Answer> answerList = answerRepository.findAll();
         assertThat(answerList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    public void checkPositIsRequired() throws Exception {
-        int databaseSizeBeforeTest = answerRepository.findAll().size();
-        // set the field null
-        answer.setPosit(null);
-
-        // Create the Answer, which fails.
-        AnswerDTO answerDTO = answerMapper.toDto(answer);
-
-        restAnswerMockMvc.perform(post("/api/answers")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(answerDTO)))
-            .andExpect(status().isBadRequest());
-
-        List<Answer> answerList = answerRepository.findAll();
-        assertThat(answerList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test

@@ -39,6 +39,10 @@ import instruction, {
 import file, {
   FileState
 } from 'app/entities/file/file.reducer';
+// prettier-ignore
+import category, {
+  CategoryState
+} from 'app/entities/category/category.reducer';
 /* jhipster-needle-add-reducer-import - JHipster will add reducer here */
 
 export interface IRootState {
@@ -58,6 +62,7 @@ export interface IRootState {
   readonly course: CourseState;
   readonly instruction: InstructionState;
   readonly file: FileState;
+  readonly category: CategoryState;
   /* jhipster-needle-add-reducer-type - JHipster will add reducer type here */
   readonly loadingBar: any;
 }
@@ -79,6 +84,7 @@ const rootReducer = combineReducers<IRootState>({
   course,
   instruction,
   file,
+  category,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */
   loadingBar
 });

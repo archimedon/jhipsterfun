@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Col, Row, Table } from 'reactstrap';
 // tslint:disable-next-line:no-unused-variable
-import { ICrudGetAllAction, getSortState, IPaginationBaseState } from 'react-jhipster';
+import { byteSize, ICrudGetAllAction, getSortState, IPaginationBaseState } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { IRootState } from 'app/shared/reducers';
@@ -13,7 +13,7 @@ import { IQuestion } from 'app/shared/model/question.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
-import AskView from 'app/entities/question/ask_view';
+import TextType from '../nested/text_type';
 
 export interface IQuestionProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -111,7 +111,7 @@ export class Question extends React.Component<IQuestionProps, IQuestionState> {
                       </Button>
                     </td>
                     <td>
-                      <AskView ask={question.ask} />
+                      <TextType textIn={question.ask} />
                     </td>
                     <td>{question.answersAs}</td>
                     <td>{question.minNumOptions}</td>

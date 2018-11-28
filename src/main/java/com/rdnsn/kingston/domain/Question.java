@@ -28,7 +28,8 @@ public class Question implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    
+    @Lob
     @Column(name = "ask", nullable = false)
     private String ask;
 
@@ -43,7 +44,6 @@ public class Question implements Serializable {
     @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE , orphanRemoval = true)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Answer> answers = new HashSet<>();
-
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @JoinTable(name = "question_file",

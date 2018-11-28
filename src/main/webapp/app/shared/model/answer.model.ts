@@ -2,7 +2,7 @@ import { IFile } from 'app/shared/model//file.model';
 
 export interface IAnswer {
   id?: number;
-  posit?: string;
+  posit?: any;
   correct?: boolean;
   usePositWithFile?: boolean;
   files?: IFile[];

@@ -4,7 +4,7 @@ import { Link, RouteComponentProps } from 'react-router-dom';
 import { Button, Row, Col, Label } from 'reactstrap';
 import { AvForm, AvGroup, AvInput, AvField } from 'availity-reactstrap-validation';
 // tslint:disable-next-line:no-unused-variable
-import { ICrudGetAction, ICrudGetAllAction, ICrudPutAction } from 'react-jhipster';
+import { ICrudGetAction, ICrudGetAllAction, setFileData, byteSize, ICrudPutAction } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 
@@ -12,7 +12,7 @@ import { IFile } from 'app/shared/model/file.model';
 import { getEntities as getFiles } from 'app/entities/file/file.reducer';
 import { IQuestion } from 'app/shared/model/question.model';
 import { getEntities as getQuestions } from 'app/entities/question/question.reducer';
-import { getEntity, updateEntity, createEntity, reset } from './answer.reducer';
+import { getEntity, updateEntity, createEntity, setBlob, reset } from './answer.reducer';
 import { IAnswer } from 'app/shared/model/answer.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
@@ -51,6 +51,14 @@ export class AnswerUpdate extends React.Component<IAnswerUpdateProps, IAnswerUpd
     this.props.getQuestions();
   }
 
+  onBlobChange = (isAnImage, name) => event => {
+    setFileData(event, (contentType, data) => this.props.setBlob(name, data, contentType), isAnImage);
+  };
+
+  clearBlob = name => () => {
+    this.props.setBlob(name, undefined, undefined);
+  };
+
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
       const { answerEntity } = this.props;
@@ -76,6 +84,8 @@ export class AnswerUpdate extends React.Component<IAnswerUpdateProps, IAnswerUpd
     const { answerEntity, files, questions, loading, updating } = this.props;
     const { isNew } = this.state;
 
+    const { posit } = answerEntity;
+
     return (
       <div>
         <Row className="justify-content-center">
@@ -99,9 +109,9 @@ export class AnswerUpdate extends React.Component<IAnswerUpdateProps, IAnswerUpd
                   <Label id="positLabel" for="posit">
                     Posit
                   </Label>
-                  <AvField
+                  <AvInput
                     id="answer-posit"
-                    type="text"
+                    type="textarea"
                     name="posit"
                     validate={{
                       required: { value: true, errorMessage: 'This field is required.' }
@@ -185,6 +195,7 @@ const mapDispatchToProps = {
   getQuestions,
   getEntity,
   updateEntity,
+  setBlob,
   createEntity,
   reset
 };
