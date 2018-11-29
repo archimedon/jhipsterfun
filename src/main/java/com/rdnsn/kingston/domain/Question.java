@@ -3,6 +3,9 @@ package com.rdnsn.kingston.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.engine.FetchStyle;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -41,7 +44,8 @@ public class Question implements Serializable {
     @Column(name = "min_num_options")
     private Integer minNumOptions;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE , orphanRemoval = true)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE , orphanRemoval = true, fetch=FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     private Set<Answer> answers = new HashSet<>();
     @ManyToMany

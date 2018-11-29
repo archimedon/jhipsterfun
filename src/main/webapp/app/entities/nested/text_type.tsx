@@ -32,12 +32,10 @@ export default class TextType extends React.Component<IText, ITextState> {
   inspectData(textIn) {
     // todo: DTD selectivity, sanity/security checking.
     // Inject XML tags directly.
-    const [, tag] = textIn.toLowerCase().match(/(<\w+[^>]*>).+/);
+    const resary = textIn.toLowerCase().match(/<(\w+)[^>]*>/) as string[];
+    const tag = resary && resary.length ? resary[1] : null;
 
-    return {
-      input: textIn,
-      mime: tag && tag.trim() !== '' ? (tag !== 'math' ? 'xhtml' : tag) : textIn.toLowerCase().match(/(image|base64)/) ? 'image' : 'raw'
-    };
+    return tag ? (tag !== 'math' ? 'xhtml' : tag) : textIn.toLowerCase().match(/(image\/|base64)/) ? 'image' : 'raw';
   }
 
   render() {
@@ -47,11 +45,11 @@ export default class TextType extends React.Component<IText, ITextState> {
         <div className="loading-indicator">Loading...</div>
       </div>
     ) : (
-      this.markUpData(this.inspectData(textIn))
+      this.markUpData(this.inspectData(textIn), textIn)
     );
   }
 
-  markUpData({ mime, input }) {
+  markUpData(mime, input) {
     return {
       image: data => <img src={`data:${data}`} />,
       xhtml: data => <div dangerouslySetInnerHTML={{ __html: data }} />,

@@ -11,8 +11,6 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", uses = {FileMapper.class})
 public interface QuestionMapper extends EntityMapper<QuestionDTO, Question> {
 
-
-    @Mapping(target = "answers", ignore = false)
     @Mapping(target = "lessons", ignore = true)
     Question toEntity(QuestionDTO questionDTO);
 

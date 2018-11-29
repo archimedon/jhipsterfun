@@ -15,6 +15,7 @@ import TextType from '../nested/text_type';
 import { IAnswer } from 'app/shared/model/answer.model';
 import { IFile } from 'app/shared/model/file.model';
 import DeFile from '../nested/de-file';
+import MathJax from 'react-mathjax-preview';
 
 export interface IQuestionDetailProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -91,6 +92,7 @@ const listAnswers = (answers: IAnswer[], edit = false) =>
     ? answers.map((answer, i) => (
         <span key={`answer_${answer.id}`}>
           <TextType textIn={answer.posit} />
+
           {i === answers.length - 1 ? '' : ', '}
         </span>
       ))
