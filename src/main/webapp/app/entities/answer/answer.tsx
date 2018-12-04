@@ -13,6 +13,7 @@ import { IAnswer } from 'app/shared/model/answer.model';
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { ITEMS_PER_PAGE } from 'app/shared/util/pagination.constants';
+import TextType from '../nested/text_type';
 
 export interface IAnswerProps extends StateProps, DispatchProps, RouteComponentProps<{ url: string }> {}
 
@@ -112,10 +113,20 @@ export class Answer extends React.Component<IAnswerProps, IAnswerState> {
                         {answer.id}
                       </Button>
                     </td>
-                    <td>{answer.posit}</td>
+                    <td>
+                      <TextType textIn={answer.posit} />
+                    </td>
                     <td>{answer.correct ? 'true' : 'false'}</td>
                     <td>{answer.usePositWithFile ? 'true' : 'false'}</td>
-                    <td>{answer.questionAsk ? <Link to={`question/${answer.questionId}`}>{answer.questionAsk}</Link> : ''}</td>
+                    <td>
+                      {answer.questionAsk ? (
+                        <Link to={`question/${answer.questionId}`}>
+                          <TextType textIn={answer.questionAsk} />
+                        </Link>
+                      ) : (
+                        ''
+                      )}
+                    </td>
                     <td className="text-right">
                       <div className="btn-group flex-btn-group-container">
                         <Button tag={Link} to={`${match.url}/${answer.id}`} color="info" size="sm">

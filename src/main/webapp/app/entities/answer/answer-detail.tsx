@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IRootState } from 'app/shared/reducers';
 import { getEntity } from './answer.reducer';
 import { IAnswer } from 'app/shared/model/answer.model';
+import TextType from '../nested/text_type';
+
 // tslint:disable-next-line:no-unused-variable
 import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 
@@ -31,7 +33,9 @@ export class AnswerDetail extends React.Component<IAnswerDetailProps> {
             <dt>
               <span id="posit">Posit</span>
             </dt>
-            <dd>{answerEntity.posit}</dd>
+            <dd>
+              <TextType textIn={answerEntity.posit} />
+            </dd>
             <dt>
               <span id="correct">Correct</span>
             </dt>
@@ -52,7 +56,7 @@ export class AnswerDetail extends React.Component<IAnswerDetailProps> {
                 : null}
             </dd>
             <dt>Question</dt>
-            <dd>{answerEntity.questionAsk ? answerEntity.questionAsk : ''}</dd>
+            <dd>{answerEntity.questionAsk ? <TextType textIn={answerEntity.questionAsk} /> : ''}</dd>
           </dl>
           <Button tag={Link} to="/entity/answer" replace color="info">
             <FontAwesomeIcon icon="arrow-left" /> <span className="d-none d-md-inline">Back</span>

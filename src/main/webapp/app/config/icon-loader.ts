@@ -2,6 +2,8 @@ import { faSort } from '@fortawesome/free-solid-svg-icons/faSort';
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye';
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
+import { faArrowCircleUp } from '@fortawesome/free-solid-svg-icons/faArrowCircleUp';
+import { faArrowCircleDown } from '@fortawesome/free-solid-svg-icons/faArrowCircleDown';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft';
 import { faSave } from '@fortawesome/free-solid-svg-icons/faSave';
@@ -28,6 +30,7 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle';
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch';
 import { faRoad } from '@fortawesome/free-solid-svg-icons/faRoad';
 import { faCloud } from '@fortawesome/free-solid-svg-icons/faCloud';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons/faCheckCircle';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 
@@ -39,6 +42,9 @@ export const loadIcons = () => {
     faBan,
     faTrash,
     faArrowLeft,
+    faArrowCircleUp,
+    faArrowCircleDown,
+    faCheckCircle,
     faSave,
     faPlus,
     faPencilAlt,

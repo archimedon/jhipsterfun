@@ -21,6 +21,8 @@ import { ILesson } from 'app/shared/model/lesson.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
+import TextType from '../nested/text_type';
+import SelectMedia from '../nested/select-media';
 
 export interface ILessonUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -72,6 +74,8 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
       const { lessonEntity } = this.props;
+      values.questions = (document.getElementById('holdQids') as HTMLInputElement).value.split(',');
+
       const entity = {
         ...lessonEntity,
         ...values,
@@ -87,8 +91,25 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     }
   };
 
+  // makeSelected = (selected: any[], base: any[], keys = ['id', 'id']) => {
+  //   (selected && base) base.filter(b => b.id)
+  //   base.map(it => selected.filter(that => that.id == it.id).length > 0
+  //   list={[...questions.map(it => lessonEntity.questions && Object.assign({selected:lessonEntity.questions.filter(that => that.id == it.id).length > 0 }, it))]}
+
+  //     Object.assign({selected:lessonEntity.questions.filter(that => that.id == it.id).length > 0 }, it))]}
+  // }
+
   handleClose = () => {
     this.props.history.push('/entity/lesson');
+  };
+
+  toggleItem = list => {
+    // tslint:disable-next-line
+    console.log('toggleItem');
+    const holdQids = document.getElementById('holdQids') as HTMLInputElement;
+    holdQids.value = list.map(item => item.id);
+    // tslint:disable-next-line
+    console.log('holdQids.value', holdQids.value);
   };
 
   render() {
@@ -96,6 +117,8 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     const { isNew } = this.state;
 
     const { description } = lessonEntity;
+
+    const tall = { height: '400px' };
 
     return (
       <div>
@@ -174,24 +197,22 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
-                  <Label for="questions">Question</Label>
-                  <AvInput
-                    id="lesson-question"
-                    type="select"
-                    multiple
-                    className="form-control"
-                    name="questions"
-                    value={lessonEntity.questions && lessonEntity.questions.map(e => e.id)}
-                  >
-                    <option value="" key="0" />
-                    {questions
-                      ? questions.map(otherEntity => (
-                          <option value={otherEntity.id} key={otherEntity.id}>
-                            {otherEntity.ask}
-                          </option>
-                        ))
-                      : null}
-                  </AvInput>
+                  <div id="questionBox">
+                    <input type="text" name="questions" id="holdQids" />
+                    {questions ? (
+                      <SelectMedia
+                        list={questions.map(it =>
+                          withBoolean(it, lessonEntity.questions && lessonEntity.questions.filter(that => that.id === it.id).length > 0)
+                        )}
+                        title="Attach a Question"
+                        titleHelper="question"
+                        toggleItem={this.toggleItem}
+                        labelValue={{ value: 'id', label: 'ask' }}
+                      />
+                    ) : (
+                      <b>null</b>
+                    )}
+                  </div>
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/lesson" replace color="info">
                   <FontAwesomeIcon icon="arrow-left" />
@@ -212,10 +233,30 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   }
 }
 
+export interface IMenuWrap extends IQuestion {
+  selected: boolean;
+}
+
+function withBoolean(ent: IQuestion, cval = false): IMenuWrap {
+  // ent.prototype.selected = true;
+  // const modal: IMenuWrap = {
+  //   ...ent,
+  //   selected: falses
+  // };
+  return {
+    ...ent,
+    selected: cval
+  };
+  // // tslint:disable-next-line
+  // const nent = Object.assign({'selected':cval }, ent);
+  // // const nent = Object.assign({propname: cval} ,ent);
+  // return nent;
+}
+
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
   instructions: storeState.instruction.entities,
-  questions: storeState.question.entities,
+  questions: storeState.question.entities.map(q => withBoolean(q, false)),
   courses: storeState.course.entities,
   lessonEntity: storeState.lesson.entity,
   loading: storeState.lesson.loading,

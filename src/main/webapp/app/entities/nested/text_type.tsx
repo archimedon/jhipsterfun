@@ -31,7 +31,6 @@ export default class TextType extends React.Component<IText, ITextState> {
 
   inspectData(textIn) {
     // todo: DTD selectivity, sanity/security checking.
-    // Inject XML tags directly.
     const resary = textIn.toLowerCase().match(/<(\w+)[^>]*>/) as string[];
     const tag = resary && resary.length ? resary[1] : null;
 
@@ -52,6 +51,7 @@ export default class TextType extends React.Component<IText, ITextState> {
   markUpData(mime, input) {
     return {
       image: data => <img src={`data:${data}`} />,
+      // Inject XML tags directly.
       xhtml: data => <div dangerouslySetInnerHTML={{ __html: data }} />,
       math: data => {
         const ptr = data.toLowerCase().indexOf('<math');
