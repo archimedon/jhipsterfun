@@ -16,13 +16,17 @@ import { IQuestion } from 'app/shared/model/question.model';
 import { getEntities as getQuestions } from 'app/entities/question/question.reducer';
 import { ICourse } from 'app/shared/model/course.model';
 import { getEntities as getCourses } from 'app/entities/course/course.reducer';
+import { getSession } from 'app/shared/reducers/authentication';
+
 import { getEntity, updateEntity, createEntity, setBlob, reset } from './lesson.reducer';
 import { ILesson } from 'app/shared/model/lesson.model';
 // tslint:disable-next-line:no-unused-variable
 import { convertDateTimeFromServer } from 'app/shared/util/date-utils';
 import { mapIdList } from 'app/shared/util/entity-utils';
-import TextType from '../nested/text_type';
-import SelectMedia from '../nested/select-media';
+import RichDropdown from 'app/entities/nested/rich_dropdown';
+
+import { hasAnyAuthority } from 'app/shared/auth/private-route';
+import { AUTHORITIES } from 'app/config/constants';
 
 export interface ILessonUpdateProps extends StateProps, DispatchProps, RouteComponentProps<{ id: string }> {}
 
@@ -44,6 +48,7 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
       courseId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
+    this.getQuestionData = this.getQuestionData.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -57,6 +62,7 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
       this.props.getEntity(this.props.match.params.id);
     }
 
+    this.props.getSession();
     this.props.getUsers();
     this.props.getInstructions();
     this.props.getQuestions();
@@ -74,6 +80,7 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
       const { lessonEntity } = this.props;
+      // values.questions = this.getQuestionData();
       values.questions = (document.getElementById('holdQids') as HTMLInputElement).value.split(',');
 
       const entity = {
@@ -91,14 +98,6 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     }
   };
 
-  // makeSelected = (selected: any[], base: any[], keys = ['id', 'id']) => {
-  //   (selected && base) base.filter(b => b.id)
-  //   base.map(it => selected.filter(that => that.id == it.id).length > 0
-  //   list={[...questions.map(it => lessonEntity.questions && Object.assign({selected:lessonEntity.questions.filter(that => that.id == it.id).length > 0 }, it))]}
-
-  //     Object.assign({selected:lessonEntity.questions.filter(that => that.id == it.id).length > 0 }, it))]}
-  // }
-
   handleClose = () => {
     this.props.history.push('/entity/lesson');
   };
@@ -106,19 +105,43 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   toggleItem = list => {
     // tslint:disable-next-line
     console.log('toggleItem');
+    // tslint:disable-next-line
+    console.log('list', list);
+
     const holdQids = document.getElementById('holdQids') as HTMLInputElement;
     holdQids.value = list.map(item => item.id);
     // tslint:disable-next-line
     console.log('holdQids.value', holdQids.value);
   };
 
+  getQuestionData = (): any[] => {
+    const question_menu = document.getElementById('question_menu');
+    // const selitems = question_menu.getElementsByClassName('selected') as HTMLCollection;
+    const vals = this.props.questions.filter(it => it.selected);
+    // [].map.call(selitems, (item: HTMLOListElement) => item.getAttribute('ref'));
+    // tslint:disable-next-line
+    console.log('sel questions: ', JSON.stringify(vals));
+
+    // tslint:disable-next-line
+    console.log('valsss: ', vals);
+
+    return vals;
+  };
+
+  isSelected = (id, ary: any[]) => {
+    // tslint:disable-next-line
+    console.log('id: ', id);
+    // tslint:disable-next-line
+    console.log('ary: ', ary);
+
+    return ary && ary.filter(that => that.id === id).length > 0;
+  };
+
   render() {
-    const { lessonEntity, users, instructions, questions, courses, loading, updating } = this.props;
+    const { lessonEntity, users, instructions, questions, courses, loading, updating, account } = this.props;
     const { isNew } = this.state;
 
     const { description } = lessonEntity;
-
-    const tall = { height: '400px' };
 
     return (
       <div>
@@ -165,16 +188,22 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
                   <AvField id="lesson-minNumQuestions" type="string" className="form-control" name="minNumQuestions" />
                 </AvGroup>
                 <AvGroup>
-                  <Label for="author.login">Author</Label>
-                  <AvInput id="lesson-author" type="select" className="form-control" name="authorId">
-                    {users
-                      ? users.map(otherEntity => (
+                  <Label for="lesson-author">Author</Label>
+                  {account &&
+                  //  JSON.stringify(account)
+                  // <AvField id="lesson-author" value={lessonEntity.author.id} className="form-control" type="string" name="authorId"/>
+                  this.props.isAdmin ? (
+                    <AvInput id="lesson-author" type="select" className="form-control" name="authorId">
+                      {users &&
+                        users.map(otherEntity => (
                           <option value={otherEntity.id} key={otherEntity.id}>
                             {otherEntity.login}
                           </option>
-                        ))
-                      : null}
-                  </AvInput>
+                        ))}
+                    </AvInput>
+                  ) : (
+                    <input id="lesson-author" disabled={false} value={account ? account.id : ''} type="text" name="authorId" />
+                  )}
                 </AvGroup>
                 <AvGroup>
                   <Label for="instructions">Instruction</Label>
@@ -200,18 +229,15 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
                   <div id="questionBox">
                     <input type="text" name="questions" id="holdQids" />
                     {questions ? (
-                      <SelectMedia
-                        list={questions.map(it =>
-                          withBoolean(it, lessonEntity.questions && lessonEntity.questions.filter(that => that.id === it.id).length > 0)
-                        )}
+                      <RichDropdown
+                        itemId="question_menu"
+                        list={questions.map(it => RichDropdown.makeMenuItem(it, this.isSelected(it.id, lessonEntity.questions)))}
                         title="Attach a Question"
                         titleHelper="question"
                         toggleItem={this.toggleItem}
                         labelValue={{ value: 'id', label: 'ask' }}
                       />
-                    ) : (
-                      <b>null</b>
-                    )}
+                    ) : null}
                   </div>
                 </AvGroup>
                 <Button tag={Link} id="cancel-save" to="/entity/lesson" replace color="info">
@@ -233,30 +259,13 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   }
 }
 
-export interface IMenuWrap extends IQuestion {
-  selected: boolean;
-}
-
-function withBoolean(ent: IQuestion, cval = false): IMenuWrap {
-  // ent.prototype.selected = true;
-  // const modal: IMenuWrap = {
-  //   ...ent,
-  //   selected: falses
-  // };
-  return {
-    ...ent,
-    selected: cval
-  };
-  // // tslint:disable-next-line
-  // const nent = Object.assign({'selected':cval }, ent);
-  // // const nent = Object.assign({propname: cval} ,ent);
-  // return nent;
-}
-
 const mapStateToProps = (storeState: IRootState) => ({
   users: storeState.userManagement.users,
+  account: storeState.authentication.account,
+  isAdmin: hasAnyAuthority(storeState.authentication.account.authorities, [AUTHORITIES.ADMIN]),
+  isAuthenticated: storeState.authentication.isAuthenticated,
   instructions: storeState.instruction.entities,
-  questions: storeState.question.entities.map(q => withBoolean(q, false)),
+  questions: storeState.question.entities.map(q => RichDropdown.makeMenuItem(q, false)),
   courses: storeState.course.entities,
   lessonEntity: storeState.lesson.entity,
   loading: storeState.lesson.loading,
@@ -268,6 +277,7 @@ const mapDispatchToProps = {
   getUsers,
   getInstructions,
   getQuestions,
+  getSession,
   getCourses,
   getEntity,
   updateEntity,
