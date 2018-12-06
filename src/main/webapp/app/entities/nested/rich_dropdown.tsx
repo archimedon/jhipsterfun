@@ -6,11 +6,11 @@ import 'app/entities/nested/css/rich_dropdown.css';
 
 export interface IRichDropdownProps {
   itemId?: string;
-  title: string;
+  titles?: string[];
+  dataName: string;
   list: any[];
   toggleItem?: (list: any[]) => void;
-  titleHelper: string;
-  labelValue: { label: string | number; value: any };
+  labelValue?: { label: string | number; value: any };
 }
 
 export interface IMenuItem {
@@ -22,10 +22,18 @@ export interface IMenuItem {
 export interface IRichDropdownState {
   list: any[];
   listOpen: boolean;
-  headerTitle: any;
+  headerTitle?: string;
 }
 
 export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownState> {
+  public static defaultProps = {
+    itemId: 'rich_dropdown',
+    titles: ['Select from list', '{count} Item selected', '{count} Items selected'],
+    dataName: 'list',
+    // toggleItem: list => {},
+    labelValue: { label: 'name', value: 'id' }
+  };
+
   static makeMenuItem<T>(entity: T, cval = false): T & IMenuItem {
     // tslint:disable-next-line
     return Object.assign({}, entity, { selected: cval });
@@ -35,12 +43,8 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     const count = nextProps.list ? nextProps.list.filter(a => a.selected).length : 0;
 
     // tslint:disable-next-line
-    console.log(`count: ${count}`);
-    const update = { list: nextProps.list, headerTitle: nextProps.title };
-    if (count) {
-      update.headerTitle = count === 1 ? `${count} ${nextProps.titleHelper}` : `${count} ${nextProps.titleHelper}s`;
-    }
-    return update;
+    console.log(nextProps.titles[Math.min(2, count)].replace(new RegExp('\\{count\\}', 'gi'), count));
+    return { list: nextProps.list, headerTitle: nextProps.titles[Math.min(2, count)].replace(new RegExp('\\{count\\}', 'gi'), count) };
   }
 
   constructor(props) {
@@ -49,7 +53,7 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
       // selected items are reflected in this list
       list: [...this.props.list],
       listOpen: false,
-      headerTitle: this.props.title
+      headerTitle: this.props.titles[0]
     };
     // This binding is necessary to make `this` work in the callback
     this.toggleList = this.toggleList.bind(this);
@@ -70,14 +74,16 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     if (this.props.list && this.props.list.length) {
       // tslint:disable-next-line
       console.log('componentDidUpdate items:', this.props.list);
-      this.props.toggleItem(this.props.list.filter(it => it.selected));
+      this.setAsFormVal(this.props.list.filter(it => it.selected));
+      // this.props.toggleItem(this.props.list.filter(it => it.selected));
     }
   }
 
   handleClickOutside = () => {
     // tslint:disable-next-line
     console.log('handleClickOutside');
-    if (this.props.toggleItem) this.props.toggleItem(this.props.list.filter(it => it.selected));
+    this.setAsFormVal(this.props.list.filter(it => it.selected));
+    // if (this.props.toggleItem) this.props.toggleItem(this.props.list.filter(it => it.selected));
     this.state.listOpen &&
       this.setState({
         listOpen: false
@@ -92,6 +98,18 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     }));
   };
 
+  // https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#18234317
+  // S.O. variant of String.format()
+  // formatMule = (str, ...input) => {
+  //   if (input.length) {
+  //     const repl = (previousValue, currentValue, currentIndex) =>
+  //       previousValue.replace(new RegExp(`\\{${currentIndex}\\}`, 'gi'), currentValue);
+
+  //     return input.reduce(repl, str);
+  //   }
+  //   return str;
+  // };
+
   itemHandler = itemId => {
     // tslint:disable-next-line
     console.log('itemHandler');
@@ -99,17 +117,23 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     console.log('itemId: ', itemId);
     return e => {
       const buf = this.state.list.map(element => {
-        if (element[this.props.labelValue.value || 'id'] === itemId) {
+        if (element[this.props.labelValue.value] === itemId) {
           element.selected = !element.selected;
         }
         return element;
       });
       // tslint:disable-next-line
       console.log('buf: ', buf);
+      this.setAsFormVal(buf.filter(it => it.selected));
       if (this.props.toggleItem) this.props.toggleItem(buf.filter(it => it.selected));
       // update
       this.setState({ list: buf });
     };
+  };
+
+  setAsFormVal = list => {
+    const data_store_ids = document.getElementById('data_store_ids') as HTMLInputElement;
+    data_store_ids.value = list.map(item => item.id);
   };
 
   render() {
@@ -119,10 +143,11 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     //   console.log('IF list: ', this.props.list);
     //   // this.props.toggleItem(this.props.list.filter(it => it.selected));
     // }
-    const idref = this.props.labelValue.value || 'id';
+    const idref = this.props.labelValue.value;
 
     return (
-      <div id={this.props.itemId || 'rich_dropdown'} className="dd-wrapper" onMouseLeave={this.handleClickOutside}>
+      <div id={this.props.itemId} className="dd-wrapper" onMouseLeave={this.handleClickOutside}>
+        <input type="hidden" name={this.props.dataName} id="data_store_ids" />
         <div className="dd-header" onClick={this.toggleList}>
           <div className="dd-header-title">{headerTitle}</div>
           {listOpen ? <FontAwesomeIcon icon="arrow-circle-up" size="1x" /> : <FontAwesomeIcon icon="arrow-circle-down" size="1x" />}
@@ -136,7 +161,7 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
                 key={item[idref]}
                 ref={item[idref]}
               >
-                <TextType textIn={item[this.props.labelValue.label || 'name']} />
+                <TextType textIn={item[this.props.labelValue.label]} />
                 {
                   // item.selected && <FontAwesomeIcon icon="check-circle" />
                 }

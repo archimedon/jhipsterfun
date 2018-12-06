@@ -81,7 +81,7 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     if (errors.length === 0) {
       const { lessonEntity } = this.props;
       // values.questions = this.getQuestionData();
-      values.questions = (document.getElementById('holdQids') as HTMLInputElement).value.split(',');
+      values.questions = (document.getElementsByName('questions')[0] as HTMLInputElement).value.split(',');
 
       const entity = {
         ...lessonEntity,
@@ -108,10 +108,10 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     // tslint:disable-next-line
     console.log('list', list);
 
-    const holdQids = document.getElementById('holdQids') as HTMLInputElement;
-    holdQids.value = list.map(item => item.id);
-    // tslint:disable-next-line
-    console.log('holdQids.value', holdQids.value);
+    // const holdQids = document.getElementById('holdQids') as HTMLInputElement;
+    // holdQids.value = list.map(item => item.id);
+    // // tslint:disable-next-line
+    // console.log('holdQids.value', holdQids.value);
   };
 
   getQuestionData = (): any[] => {
@@ -128,13 +128,13 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
     return vals;
   };
 
-  isSelected = (id, ary: any[]) => {
+  isSelected = (other, ary: any[]) => {
     // tslint:disable-next-line
-    console.log('id: ', id);
+    console.log('id: ', other.id);
     // tslint:disable-next-line
     console.log('ary: ', ary);
 
-    return ary && ary.filter(that => that.id === id).length > 0;
+    return ary && ary.filter(that => that.id === other.id).length > 0;
   };
 
   render() {
@@ -226,14 +226,14 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
                   </AvInput>
                 </AvGroup>
                 <AvGroup>
+                  <Label for="question_menu">Questions</Label>
                   <div id="questionBox">
-                    <input type="text" name="questions" id="holdQids" />
                     {questions ? (
                       <RichDropdown
                         itemId="question_menu"
-                        list={questions.map(it => RichDropdown.makeMenuItem(it, this.isSelected(it.id, lessonEntity.questions)))}
-                        title="Attach a Question"
-                        titleHelper="question"
+                        list={questions.map(it => RichDropdown.makeMenuItem(it, this.isSelected(it, lessonEntity.questions)))}
+                        dataName="questions"
+                        titles={['Select Question(s)', '{count} Question attached', '{count} Questions attached']}
                         toggleItem={this.toggleItem}
                         labelValue={{ value: 'id', label: 'ask' }}
                       />
