@@ -5,11 +5,34 @@ import TextType from 'app/entities/nested/text_type';
 import 'app/entities/nested/css/rich_dropdown.css';
 
 export interface IRichDropdownProps {
-  itemId?: string;
+  /** This component's htmlId */
+  htmlId?: string;
+  /**
+   * An array of menu headers.
+   *
+   *  Eg: ['Select from list', '{count} Item selected', '{count} Items selected'].
+   *
+   *    '{count}' will be replaced by the actual number of items selected.
+   */
   titles?: string[];
+  /**
+   * The <input> element "name".
+   *
+   *  Eg: <input name={dataName}/>
+   */
   dataName: string;
-  list: any[];
+  /**
+   * A list of MenuItems
+   */
+  list: IMenuItem[];
+  /**
+   * Set a listener that receives a list of selected Items.
+   */
   toggleItem?: (list: any[]) => void;
+  /**
+   * The property names used to access the entity's ID (or primary_key)
+   * and a property for the UI-label
+   */
   labelValue?: { label: string | number; value: any };
 }
 
@@ -20,17 +43,16 @@ export interface IMenuItem {
 }
 
 export interface IRichDropdownState {
-  list: any[];
   listOpen: boolean;
   headerTitle?: string;
 }
 
 export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownState> {
   public static defaultProps = {
-    itemId: 'rich_dropdown',
+    htmlId: 'rich_dropdown',
     titles: ['Select from list', '{count} Item selected', '{count} Items selected'],
     dataName: 'list',
-    // toggleItem: list => {},
+    toggleItem: list => {},
     labelValue: { label: 'name', value: 'id' }
   };
 
@@ -41,17 +63,14 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const count = nextProps.list ? nextProps.list.filter(a => a.selected).length : 0;
-
-    // tslint:disable-next-line
-    console.log(nextProps.titles[Math.min(2, count)].replace(new RegExp('\\{count\\}', 'gi'), count));
-    return { list: nextProps.list, headerTitle: nextProps.titles[Math.min(2, count)].replace(new RegExp('\\{count\\}', 'gi'), count) };
+    return {
+      headerTitle: nextProps.titles[Math.min(2, count)].replace(new RegExp('\\{count\\}', 'gi'), count)
+    };
   }
 
   constructor(props) {
     super(props);
     this.state = {
-      // selected items are reflected in this list
-      list: [...this.props.list],
       listOpen: false,
       headerTitle: this.props.titles[0]
     };
@@ -64,18 +83,14 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
   componentDidMount() {
     // tslint:disable-next-line
     console.log('componentDidMount');
-    this.setState({ list: this.props.list });
+    this.setState({ listOpen: this.state.listOpen });
   }
 
   componentDidUpdate() {
-    // tslint:disable-next-line
-    console.log('componentDidUpdate');
-
     if (this.props.list && this.props.list.length) {
       // tslint:disable-next-line
       console.log('componentDidUpdate items:', this.props.list);
       this.setAsFormVal(this.props.list.filter(it => it.selected));
-      // this.props.toggleItem(this.props.list.filter(it => it.selected));
     }
   }
 
@@ -83,7 +98,6 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     // tslint:disable-next-line
     console.log('handleClickOutside');
     this.setAsFormVal(this.props.list.filter(it => it.selected));
-    // if (this.props.toggleItem) this.props.toggleItem(this.props.list.filter(it => it.selected));
     this.state.listOpen &&
       this.setState({
         listOpen: false
@@ -98,55 +112,36 @@ export class RichDropdown extends Component<IRichDropdownProps, IRichDropdownSta
     }));
   };
 
-  // https://stackoverflow.com/questions/610406/javascript-equivalent-to-printf-string-format/4673436#18234317
-  // S.O. variant of String.format()
-  // formatMule = (str, ...input) => {
-  //   if (input.length) {
-  //     const repl = (previousValue, currentValue, currentIndex) =>
-  //       previousValue.replace(new RegExp(`\\{${currentIndex}\\}`, 'gi'), currentValue);
-
-  //     return input.reduce(repl, str);
-  //   }
-  //   return str;
-  // };
-
   itemHandler = itemId => {
     // tslint:disable-next-line
-    console.log('itemHandler');
-    // tslint:disable-next-line
-    console.log('itemId: ', itemId);
-    return e => {
-      const buf = this.state.list.map(element => {
-        if (element[this.props.labelValue.value] === itemId) {
-          element.selected = !element.selected;
-        }
-        return element;
-      });
-      // tslint:disable-next-line
-      console.log('buf: ', buf);
-      this.setAsFormVal(buf.filter(it => it.selected));
-      if (this.props.toggleItem) this.props.toggleItem(buf.filter(it => it.selected));
-      // update
-      this.setState({ list: buf });
-    };
+    console.log('itemHandler', itemId);
+    return (event: React.MouseEvent<HTMLLIElement>) =>
+      this.setAsFormVal(
+        this.props.list
+          .map(element => {
+            if (element[this.props.labelValue.value] === itemId) {
+              element.selected = !element.selected;
+              element.selected ? event.currentTarget.classList.add('selected') : event.currentTarget.classList.remove('selected');
+            }
+            return element;
+          })
+          .filter(it => it.selected)
+      );
   };
 
   setAsFormVal = list => {
     const data_store_ids = document.getElementById('data_store_ids') as HTMLInputElement;
     data_store_ids.value = list.map(item => item.id);
+    if (this.props.toggleItem) this.props.toggleItem(list);
   };
 
   render() {
-    const { list, listOpen, headerTitle } = this.state;
-    // if (this.props.list) {
-    //   // tslint:disable-next-line
-    //   console.log('IF list: ', this.props.list);
-    //   // this.props.toggleItem(this.props.list.filter(it => it.selected));
-    // }
+    const { listOpen, headerTitle } = this.state;
+    const { list } = this.props;
     const idref = this.props.labelValue.value;
 
     return (
-      <div id={this.props.itemId} className="dd-wrapper" onMouseLeave={this.handleClickOutside}>
+      <div id={this.props.htmlId} className="dd-wrapper" onMouseLeave={this.handleClickOutside}>
         <input type="hidden" name={this.props.dataName} id="data_store_ids" />
         <div className="dd-header" onClick={this.toggleList}>
           <div className="dd-header-title">{headerTitle}</div>

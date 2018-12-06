@@ -48,7 +48,6 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
       courseId: '0',
       isNew: !this.props.match.params || !this.props.match.params.id
     };
-    this.getQuestionData = this.getQuestionData.bind(this);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -80,7 +79,6 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
   saveEntity = (event, errors, values) => {
     if (errors.length === 0) {
       const { lessonEntity } = this.props;
-      // values.questions = this.getQuestionData();
       values.questions = (document.getElementsByName('questions')[0] as HTMLInputElement).value.split(',');
 
       const entity = {
@@ -104,38 +102,10 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
 
   toggleItem = list => {
     // tslint:disable-next-line
-    console.log('toggleItem');
-    // tslint:disable-next-line
-    console.log('list', list);
-
-    // const holdQids = document.getElementById('holdQids') as HTMLInputElement;
-    // holdQids.value = list.map(item => item.id);
-    // // tslint:disable-next-line
-    // console.log('holdQids.value', holdQids.value);
+    // console.log('toggleItem', list);
   };
 
-  getQuestionData = (): any[] => {
-    const question_menu = document.getElementById('question_menu');
-    // const selitems = question_menu.getElementsByClassName('selected') as HTMLCollection;
-    const vals = this.props.questions.filter(it => it.selected);
-    // [].map.call(selitems, (item: HTMLOListElement) => item.getAttribute('ref'));
-    // tslint:disable-next-line
-    console.log('sel questions: ', JSON.stringify(vals));
-
-    // tslint:disable-next-line
-    console.log('valsss: ', vals);
-
-    return vals;
-  };
-
-  isSelected = (other, ary: any[]) => {
-    // tslint:disable-next-line
-    console.log('id: ', other.id);
-    // tslint:disable-next-line
-    console.log('ary: ', ary);
-
-    return ary && ary.filter(that => that.id === other.id).length > 0;
-  };
+  isSelected = (other, ary: any[]) => ary && ary.filter(that => that.id === other.id).length > 0;
 
   render() {
     const { lessonEntity, users, instructions, questions, courses, loading, updating, account } = this.props;
@@ -230,7 +200,7 @@ export class LessonUpdate extends React.Component<ILessonUpdateProps, ILessonUpd
                   <div id="questionBox">
                     {questions ? (
                       <RichDropdown
-                        itemId="question_menu"
+                        htmlId="question_menu"
                         list={questions.map(it => RichDropdown.makeMenuItem(it, this.isSelected(it, lessonEntity.questions)))}
                         dataName="questions"
                         titles={['Select Question(s)', '{count} Question attached', '{count} Questions attached']}

@@ -41,7 +41,6 @@
   z-index: 10;
   position: absolute;
   width: 100%;
-  border: 1px solid #dfdfdf;
   border-top: none;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
@@ -63,11 +62,12 @@
   display: inline-block;
   white-space: nowrap;
   text-overflow: ellipsis;
-  border: 1px solid red;
+  border: 8px outset #555555;
 }
 .dd-list-item.selected {
   color: #fff;
-  background-color: #ccad2f;
+  background-color: rgb(115, 153, 10);
+  border: 8px inset silver;
 }
 .dd-list-item:hover {
   color: #fff;
